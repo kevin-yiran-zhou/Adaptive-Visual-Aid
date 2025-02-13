@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="20dp">
+
+    <!-- App Title -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Adaptive Visual Aid"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:paddingBottom="30dp"/>
+
+    <!-- Navigation Button -->
+    <Button
+        android:id="@+id/btnNavigation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Navigation"
+        android:padding="10dp"
+        android:textSize="18sp"/>
+
+    <!-- What is in front of me? Button -->
+    <Button
+        android:id="@+id/btnWhatIsInFront"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="What is in front of me?"
+        android:padding="10dp"
+        android:textSize="18sp"
+        android:layout_marginTop="10dp"/>
+
+    <!-- I need help Button -->
+    <Button
+        android:id="@+id/btnNeedHelp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="I need help"
+        android:padding="10dp"
+        android:textSize="18sp"
+        android:layout_marginTop="10dp"/>
+
+</LinearLayout>
