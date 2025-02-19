@@ -12,38 +12,57 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Adaptive Visual Aid"
-        android:textSize="24sp"
+        android:textSize="30sp"
         android:textStyle="bold"
         android:textColor="@android:color/black"
-        android:paddingBottom="30dp"/>
+        android:paddingBottom="30dp"
+        android:textAllCaps="false"/>
 
     <!-- Navigation Button -->
     <Button
         android:id="@+id/btnNavigation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
         android:text="Navigation"
-        android:padding="10dp"
-        android:textSize="18sp"/>
+        android:padding="15dp"
+        android:textSize="18sp"
+        android:textAllCaps="false"
+        android:layout_marginHorizontal="20dp"/>
 
     <!-- What is in front of me? Button -->
     <Button
         android:id="@+id/btnWhatIsInFront"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
         android:text="What is in front of me?"
-        android:padding="10dp"
+        android:padding="15dp"
         android:textSize="18sp"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="10dp"
+        android:textAllCaps="false"
+        android:layout_marginHorizontal="20dp"/>
 
     <!-- I need help Button -->
     <Button
         android:id="@+id/btnNeedHelp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
         android:text="I need help"
-        android:padding="10dp"
+        android:padding="15dp"
         android:textSize="18sp"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="10dp"
+        android:textAllCaps="false"
+        android:layout_marginHorizontal="20dp"/>
+
+    <!-- Microphone Button -->
+    <ImageButton
+        android:id="@+id/btnMicrophone"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/microphone"
+        android:scaleType="fitCenter"
+        android:contentDescription="Microphone"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:layout_marginTop="20dp"
+        android:padding="10dp"/>
 
 </LinearLayout>

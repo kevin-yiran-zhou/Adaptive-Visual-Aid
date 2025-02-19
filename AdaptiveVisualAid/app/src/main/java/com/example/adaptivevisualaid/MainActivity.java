@@ -21,9 +21,9 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
 
         tts = new TextToSpeech(this, this, "com.google.android.tts"); // Use Google TTS
 
-        findViewById(R.id.btnNavigation).setOnClickListener(v -> speakAndLaunch("Opening Google Maps", this::openGoogleMaps));
-        findViewById(R.id.btnWhatIsInFront).setOnClickListener(v -> speakAndLaunch("Opening Envision AI", this::openEnvisionAI));
-        findViewById(R.id.btnNeedHelp).setOnClickListener(v -> speakAndLaunch("Opening Be My Eyes", this::openBeMyEyes));
+        findViewById(R.id.btnNavigation).setOnClickListener(v -> speakAndLaunch("Going to Google Maps", this::openGoogleMaps));
+        findViewById(R.id.btnWhatIsInFront).setOnClickListener(v -> speakAndLaunch("Going to Envision AI", this::openEnvisionAI));
+        findViewById(R.id.btnNeedHelp).setOnClickListener(v -> speakAndLaunch("Going to Be My Eyes", this::openBeMyEyes));
     }
 
     @Override
@@ -31,7 +31,6 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         if (status == TextToSpeech.SUCCESS) {
             if (tts.setLanguage(Locale.US) >= TextToSpeech.LANG_AVAILABLE) {
                 isTtsReady = true;
-                speak("Hi! How can I help you?");
             }
         }
     }
