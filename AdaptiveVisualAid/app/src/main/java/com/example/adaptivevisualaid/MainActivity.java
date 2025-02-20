@@ -1,13 +1,17 @@
 package com.example.adaptivevisualaid;
 
+import android.content.pm.PackageManager;
+import android.content.pm.PackageInfo;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 import java.util.Locale;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements TextToSpeech.OnInitListener {
 
@@ -51,10 +55,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
     }
 
     private void openGoogleMaps() {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:0,0?q="));
-        intent.setPackage("com.google.android.apps.maps");
-        startActivity(intent.resolveActivity(getPackageManager()) != null ? intent :
-                new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com/maps")));
+        openAppOrStore("com.google.android.apps.maps", "https://play.google.com/store/apps/details?id=com.google.android.apps.maps");
     }
 
     private void openEnvisionAI() {
