@@ -65,4 +65,17 @@
         android:layout_marginTop="20dp"
         android:padding="10dp"/>
 
+    <!-- Recognized Speech Text -->
+    <TextView
+        android:id="@+id/txtSpeechResult"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Listening..."
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:paddingTop="10dp"
+        android:gravity="center"
+        android:visibility="gone"/>
+
 </LinearLayout>

@@ -9,14 +9,20 @@ import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.ImageButton;
 import androidx.appcompat.app.AppCompatActivity;
 import java.util.Locale;
 import java.util.List;
+import android.os.Handler;
+import android.os.Looper;
+
 
 public class MainActivity extends AppCompatActivity implements TextToSpeech.OnInitListener {
 
     private TextToSpeech tts;
     private boolean isTtsReady = false;
+    private VoiceAssistant voiceAssistant;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,10 +30,24 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         setContentView(R.layout.activity_main);
 
         tts = new TextToSpeech(this, this, "com.google.android.tts"); // Use Google TTS
+        TextView txtSpeechResult = findViewById(R.id.txtSpeechResult);
+        voiceAssistant = new VoiceAssistant(this, txtSpeechResult);
 
         findViewById(R.id.btnNavigation).setOnClickListener(v -> speakAndLaunch("Going to Google Maps", this::openGoogleMaps));
         findViewById(R.id.btnWhatIsInFront).setOnClickListener(v -> speakAndLaunch("Going to Envision AI", this::openEnvisionAI));
         findViewById(R.id.btnNeedHelp).setOnClickListener(v -> speakAndLaunch("Going to Be My Eyes", this::openBeMyEyes));
+
+        // Microphone button long press to start voice recognition
+        ImageButton btnMicrophone = findViewById(R.id.btnMicrophone);
+        btnMicrophone.setOnLongClickListener(v -> {
+            System.out.print("long click detected");
+            speak("Hi, how can I help you?");
+//            voiceAssistant.startListening();
+            new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                voiceAssistant.startListening();
+            }, 2000);
+            return true;
+        });
     }
 
     @Override
@@ -41,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
 
     private void speakAndLaunch(String message, Runnable action) {
         speak(message);
+        tts.setOnUtteranceProgressListener(null); // Remove existing listener
         tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
             @Override public void onStart(String utteranceId) {}
             @Override public void onDone(String utteranceId) { runOnUiThread(action); }
@@ -77,5 +98,11 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
             tts.shutdown();
         }
         super.onDestroy();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        voiceAssistant.handleVoiceRecognitionResult(requestCode, resultCode, data);
     }
 }
