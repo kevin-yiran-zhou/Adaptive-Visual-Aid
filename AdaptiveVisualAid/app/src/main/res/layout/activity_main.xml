@@ -23,21 +23,9 @@
         android:id="@+id/btnNavigation"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:text="Navigation"
+        android:text="Google Maps"
         android:padding="15dp"
         android:textSize="18sp"
-        android:textAllCaps="false"
-        android:layout_marginHorizontal="20dp"/>
-
-    <!-- What is in front of me? Button -->
-    <Button
-        android:id="@+id/btnWhatIsInFront"
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:text="What is in front of me?"
-        android:padding="15dp"
-        android:textSize="18sp"
-        android:layout_marginTop="10dp"
         android:textAllCaps="false"
         android:layout_marginHorizontal="20dp"/>
 
@@ -46,7 +34,19 @@
         android:id="@+id/btnNeedHelp"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:text="I need help"
+        android:text="Be My Eyes"
+        android:padding="15dp"
+        android:textSize="18sp"
+        android:layout_marginTop="10dp"
+        android:textAllCaps="false"
+        android:layout_marginHorizontal="20dp"/>
+
+    <!-- What is in front of me? Button -->
+    <Button
+        android:id="@+id/btnWhatIsInFront"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:text="Envision AI"
         android:padding="15dp"
         android:textSize="18sp"
         android:layout_marginTop="10dp"

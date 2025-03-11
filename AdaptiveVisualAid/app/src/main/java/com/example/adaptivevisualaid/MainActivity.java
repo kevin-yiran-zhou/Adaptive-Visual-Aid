@@ -20,9 +20,9 @@ import android.os.Looper;
 
 public class MainActivity extends AppCompatActivity implements TextToSpeech.OnInitListener {
 
-    private TextToSpeech tts;
-    private boolean isTtsReady = false;
-    private VoiceAssistant voiceAssistant;
+    public TextToSpeech tts;
+    public boolean isTtsReady = false;
+    public VoiceAssistant voiceAssistant;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         }
     }
 
-    private void speakAndLaunch(String message, Runnable action) {
+    public void speakAndLaunch(String message, Runnable action) {
         speak(message);
         tts.setOnUtteranceProgressListener(null); // Remove existing listener
         tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
@@ -69,25 +69,25 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         });
     }
 
-    private void speak(String message) {
+    public void speak(String message) {
         if (isTtsReady) {
             tts.speak(message, TextToSpeech.QUEUE_FLUSH, null, "TTS_MESSAGE_ID");
         }
     }
 
-    private void openGoogleMaps() {
+    public void openGoogleMaps() {
         openAppOrStore("com.google.android.apps.maps", "https://play.google.com/store/apps/details?id=com.google.android.apps.maps");
     }
 
-    private void openEnvisionAI() {
-        openAppOrStore("com.letsenvision.envisionai", "https://play.google.com/store/apps/details?id=com.letsenvision.envisionai");
-    }
-
-    private void openBeMyEyes() {
+    public void openBeMyEyes() {
         openAppOrStore("com.bemyeyes.bemyeyes", "https://play.google.com/store/apps/details?id=com.bemyeyes.bemyeyes");
     }
 
-    private void openAppOrStore(String packageName, String storeUrl) {
+    public void openEnvisionAI() {
+        openAppOrStore("com.letsenvision.envisionai", "https://play.google.com/store/apps/details?id=com.letsenvision.envisionai");
+    }
+
+    public void openAppOrStore(String packageName, String storeUrl) {
         Intent launchIntent = getPackageManager().getLaunchIntentForPackage(packageName);
         startActivity(launchIntent != null ? launchIntent : new Intent(Intent.ACTION_VIEW, Uri.parse(storeUrl)));
     }
