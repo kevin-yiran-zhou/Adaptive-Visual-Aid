@@ -34,15 +34,18 @@ public class VoiceAssistant {
     private void listenLoop() {
         new Thread(() -> {
             while (isListening) {
-                activity.runOnUiThread(this::startVoiceRecognition);
+                if (isListening) { // Prevent multiple triggers
+                    activity.runOnUiThread(this::startVoiceRecognition);
+                }
                 try {
-                    Thread.sleep(3000); // Small delay to avoid rapid triggers
+                    Thread.sleep(6000); // Avoid rapid triggers
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         }).start();
     }
+
 
     private void startVoiceRecognition() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -73,7 +76,7 @@ public class VoiceAssistant {
         text = text.toLowerCase();
         String matchedApp = findMatchingApp(text);
         if (matchedApp == null) {
-            mainActivity.speak("Sorry, I don't understand.");
+            mainActivity.speak("Sorry, I don't understand. Can you say it again?");
             return;
         }
         if (matchedApp.equals("Google Maps")) {
@@ -86,7 +89,6 @@ public class VoiceAssistant {
             mainActivity.speak("Sorry, I don't understand.");
         }
     }
-
 
     public void handleVoiceRecognitionResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == VOICE_RECOGNITION_REQUEST_CODE && resultCode == Activity.RESULT_OK) {

@@ -60,13 +60,15 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
     }
 
     public void speakAndLaunch(String message, Runnable action) {
-        speak(message);
-        tts.setOnUtteranceProgressListener(null); // Remove existing listener
+        if (!isTtsReady) return;
+
         tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
             @Override public void onStart(String utteranceId) {}
             @Override public void onDone(String utteranceId) { runOnUiThread(action); }
             @Override public void onError(String utteranceId) { runOnUiThread(action); }
         });
+
+        speak(message);
     }
 
     public void speak(String message) {
