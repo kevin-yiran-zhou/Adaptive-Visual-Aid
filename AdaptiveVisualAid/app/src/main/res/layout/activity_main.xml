@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
+    android:gravity="top|center_horizontal"
     android:padding="20dp">
 
     <!-- Settings Button (Popup Menu) -->
@@ -68,8 +68,8 @@
     <!-- Microphone Button -->
     <ImageButton
         android:id="@+id/btnMicrophone"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
         android:src="@drawable/microphone"
         android:scaleType="fitCenter"
         android:contentDescription="Microphone"

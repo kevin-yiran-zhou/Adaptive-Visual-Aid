@@ -14,7 +14,6 @@ public class VoiceAssistant {
     private final Activity activity;
     private final TextView txtSpeechResult;
     private final Map<String, List<String>> keywordMap;
-
     public VoiceAssistant(Activity activity, TextView txtSpeechResult) {
         this.activity = activity;
         this.txtSpeechResult = txtSpeechResult;
