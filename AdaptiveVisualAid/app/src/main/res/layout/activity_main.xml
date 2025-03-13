@@ -68,14 +68,20 @@
     <!-- Microphone Button -->
     <ImageButton
         android:id="@+id/btnMicrophone"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
         android:src="@drawable/microphone"
         android:scaleType="fitCenter"
         android:contentDescription="Microphone"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:layout_marginTop="20dp"
-        android:padding="10dp"/>
+        android:layout_marginTop="20dp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Voice Assistant"
+        android:textSize="30sp"
+        android:textColor="@android:color/black"
+        android:textAllCaps="false"/>
 
     <!-- Recognized Speech Text -->
     <TextView
