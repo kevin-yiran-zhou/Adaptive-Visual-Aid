@@ -42,9 +42,10 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         // Microphone button long press to start voice recognition
         ImageButton btnMicrophone = findViewById(R.id.btnMicrophone);
         btnMicrophone.setOnLongClickListener(v -> {
-            System.out.print("long click detected");
+            Log.d("VoiceAssistant", "Microphone button long pressed");
+            // Reset TTS to avoid accidental execution of old actions
+            tts.setOnUtteranceProgressListener(null);
             speak("Hi, how can I help you?");
-//            voiceAssistant.startListening();
             new Handler(Looper.getMainLooper()).postDelayed(() -> {
                 voiceAssistant.startListening();
             }, 2000);

@@ -10,7 +10,7 @@ import java.util.*;
 
 public class VoiceAssistant {
     private static final int VOICE_RECOGNITION_REQUEST_CODE = 100;
-    private boolean isListening = false;
+    public boolean isListening = false;
     private final Activity activity;
     private final TextView txtSpeechResult;
     private final Map<String, List<String>> keywordMap;
