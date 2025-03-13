@@ -7,16 +7,28 @@
     android:gravity="center"
     android:padding="20dp">
 
-    <!-- App Title -->
-    <TextView
+    <!-- Settings Button (Popup Menu) -->
+    <ImageButton
+        android:id="@+id/btnMenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Adaptive Visual Aid"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        android:textColor="@android:color/black"
-        android:paddingBottom="30dp"
-        android:textAllCaps="false"/>
+        android:layout_gravity="end"
+        android:layout_marginBottom="10dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Menu"
+        android:padding="10dp"
+        android:src="@android:drawable/ic_menu_more" />
+
+    <!--    &lt;!&ndash; App Title &ndash;&gt;-->
+    <!--    <TextView-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:text="Adaptive Visual Aid"-->
+    <!--        android:textSize="30sp"-->
+    <!--        android:textStyle="bold"-->
+    <!--        android:textColor="@android:color/black"-->
+    <!--        android:paddingBottom="30dp"-->
+    <!--        android:textAllCaps="false"/>-->
 
     <!-- Navigation Button -->
     <Button

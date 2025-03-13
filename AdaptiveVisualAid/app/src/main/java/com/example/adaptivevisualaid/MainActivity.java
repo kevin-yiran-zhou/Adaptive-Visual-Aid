@@ -1,5 +1,6 @@
 package com.example.adaptivevisualaid;
 
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageInfo;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import android.widget.Button;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.ImageButton;
 import androidx.appcompat.app.AppCompatActivity;
@@ -48,6 +50,39 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
             }, 2000);
             return true;
         });
+
+        // Menu Button Click Listener
+        ImageButton btnMenu = findViewById(R.id.btnMenu);
+        btnMenu.setOnClickListener(v -> {
+            PopupMenu popup = new PopupMenu(MainActivity.this, v);
+            popup.getMenuInflater().inflate(R.menu.menu_main, popup.getMenu());
+
+            popup.setOnMenuItemClickListener(item -> {
+                if (item.getItemId() == R.id.menu_settings) {
+                    startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                    return true;
+                } else if (item.getItemId() == R.id.menu_login) {
+                    // Handle login click (future implementation)
+                    return true;
+                }
+                return false;
+            });
+
+            popup.show();
+        });
+
+        // Load settings from SharedPreferences
+        SharedPreferences sharedPreferences = getSharedPreferences("SettingsPrefs", MODE_PRIVATE);
+        boolean heyAvaEnabled = sharedPreferences.getBoolean("heyAvaEnabled", false);
+        boolean tapGlassEnabled = sharedPreferences.getBoolean("tapGlassEnabled", false);
+        // Apply settings
+        if (heyAvaEnabled) {
+            startWakeWordDetection();  // Start "Hey Ava" listening
+        }
+        if (tapGlassEnabled) {
+            // Implement tap detection later if needed
+        }
+
     }
 
     @Override
@@ -94,6 +129,12 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         startActivity(launchIntent != null ? launchIntent : new Intent(Intent.ACTION_VIEW, Uri.parse(storeUrl)));
     }
 
+    private void startWakeWordDetection() {
+        // Placeholder for "Hey Ava" voice activation
+        // We will implement this next!
+        Log.d("VoiceAssistant", "'Hey Ava' detection started");
+    }
+
     @Override
     protected void onDestroy() {
         if (tts != null) {
@@ -105,6 +146,17 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == SETTINGS_REQUEST_CODE && resultCode == RESULT_OK) {
+//            // Reload preferences when returning from settings
+//            SharedPreferences sharedPreferences = getSharedPreferences("SettingsPrefs", MODE_PRIVATE);
+//            boolean heyAvaEnabled = sharedPreferences.getBoolean("heyAvaEnabled", false);
+//
+//            if (heyAvaEnabled) {
+//                startWakeWordDetection();
+//            } else {
+//                stopWakeWordDetection(); // Stop listening if the user turns it off
+//            }
+//        }
         voiceAssistant.handleVoiceRecognitionResult(requestCode, resultCode, data);
     }
 }
