@@ -36,8 +36,9 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:text="Google Maps"
-        android:padding="15dp"
-        android:textSize="18sp"
+        android:padding="5dp"
+        android:textSize="24sp"
+        android:textStyle="bold"
         android:textAllCaps="false"
         android:layout_marginHorizontal="20dp"/>
 
@@ -47,8 +48,9 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:text="Be My Eyes"
-        android:padding="15dp"
-        android:textSize="18sp"
+        android:padding="5dp"
+        android:textSize="24sp"
+        android:textStyle="bold"
         android:layout_marginTop="10dp"
         android:textAllCaps="false"
         android:layout_marginHorizontal="20dp"/>
@@ -59,8 +61,9 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:text="Envision AI"
-        android:padding="15dp"
-        android:textSize="18sp"
+        android:padding="5dp"
+        android:textSize="24sp"
+        android:textStyle="bold"
         android:layout_marginTop="10dp"
         android:textAllCaps="false"
         android:layout_marginHorizontal="20dp"/>
@@ -79,7 +82,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Voice Assistant"
-        android:textSize="30sp"
+        android:textSize="20sp"
         android:textColor="@android:color/black"
         android:textAllCaps="false"/>
 

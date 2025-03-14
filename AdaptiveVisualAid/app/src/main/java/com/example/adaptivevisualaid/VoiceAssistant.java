@@ -18,9 +18,9 @@ public class VoiceAssistant {
         this.activity = activity;
         this.txtSpeechResult = txtSpeechResult;
         keywordMap = new HashMap<>();
-        keywordMap.put("Google Maps", Arrays.asList("maps", "google maps", "directions", "navigation", "go somewhere", "place"));
-        keywordMap.put("Be My Eyes", Arrays.asList("be my eyes", "be my eye", "help", "assistance", "volunteer"));
+        keywordMap.put("Google Maps", Arrays.asList("maps", "map", "google maps", "direction", "directions", "navigate", "navigation", "go somewhere", "place"));
         keywordMap.put("Envision AI", Arrays.asList("envision", "object", "in front of me", "describe"));
+        keywordMap.put("Be My Eyes", Arrays.asList("be my eyes", "be my eye", "help", "assistance", "volunteer"));
     }
 
     public void startListening() {
