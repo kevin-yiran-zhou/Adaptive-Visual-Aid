@@ -1,9 +1,12 @@
 package com.example.adaptivevisualaid;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageInfo;
 import android.content.Intent;
+import android.media.AudioDeviceInfo;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.util.Log;
 import android.os.Bundle;
@@ -14,22 +17,40 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.ImageButton;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import java.util.Locale;
 import java.util.List;
 import android.os.Handler;
 import android.os.Looper;
+import android.widget.Toast;
+
+import android.Manifest;
 
 
 public class MainActivity extends AppCompatActivity implements TextToSpeech.OnInitListener {
 
     public TextToSpeech tts;
     public boolean isTtsReady = false;
+    boolean heyAvaEnabled;
+    boolean tapGlassEnabled;
+    boolean cameraAudioEnabled;
+    boolean usbCameraEnabled;
+    boolean usbMicFound = false;
     public VoiceAssistant voiceAssistant;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.RECORD_AUDIO}, 1);
+        }
+
 
         tts = new TextToSpeech(this, this, "com.google.android.tts"); // Use Google TTS
         TextView txtSpeechResult = findViewById(R.id.txtSpeechResult);
@@ -74,8 +95,10 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
 
         // Load settings from SharedPreferences
         SharedPreferences sharedPreferences = getSharedPreferences("SettingsPrefs", MODE_PRIVATE);
-        boolean heyAvaEnabled = sharedPreferences.getBoolean("heyAvaEnabled", false);
-        boolean tapGlassEnabled = sharedPreferences.getBoolean("tapGlassEnabled", false);
+        heyAvaEnabled = sharedPreferences.getBoolean("heyAvaEnabled", false);
+        tapGlassEnabled = sharedPreferences.getBoolean("tapGlassEnabled", false);
+        cameraAudioEnabled = sharedPreferences.getBoolean("cameraAudioEnabled", false);
+        usbCameraEnabled = sharedPreferences.getBoolean("usbCameraEnabled", false);
         // Apply settings
         if (heyAvaEnabled) {
             startWakeWordDetection();  // Start "Hey Ava" listening
@@ -83,7 +106,12 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         if (tapGlassEnabled) {
             // Implement tap detection later if needed
         }
-
+        if (cameraAudioEnabled) {
+            checkUsbMicrophoneAvailability();
+        }
+        if (usbCameraEnabled) {
+            // Implement later if needed
+        }
     }
 
     @Override
@@ -91,6 +119,18 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         if (status == TextToSpeech.SUCCESS) {
             if (tts.setLanguage(Locale.US) >= TextToSpeech.LANG_AVAILABLE) {
                 isTtsReady = true;
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 1) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Microphone Permission Granted", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Microphone Permission Denied", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -135,6 +175,29 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         // We will implement this next!
         Log.d("VoiceAssistant", "'Hey Ava' detection started");
     }
+
+    private void checkUsbMicrophoneAvailability() {
+        AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        String message = "Checking USB Microphone...";  // Initialize message
+        Boolean micFound = false;
+
+        if (audioManager.getDevices(AudioManager.GET_DEVICES_INPUTS).length > 0) {
+            for (AudioDeviceInfo device : audioManager.getDevices(AudioManager.GET_DEVICES_INPUTS)) {
+                if (device.getType() == AudioDeviceInfo.TYPE_USB_DEVICE) {
+                    message = "USB Microphone Found: " + device.getProductName();
+                    micFound = true;
+                    break;
+                }
+            }
+        }
+        usbMicFound = micFound;
+        if (!micFound) {
+            message = "No USB Microphone Detected";
+        }
+        // Show a Toast message
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
+
 
     @Override
     protected void onDestroy() {

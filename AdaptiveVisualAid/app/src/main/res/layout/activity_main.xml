@@ -78,25 +78,17 @@
         android:contentDescription="Microphone"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:layout_marginTop="20dp" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Voice Assistant"
-        android:textSize="20sp"
-        android:textColor="@android:color/black"
-        android:textAllCaps="false"/>
 
     <!-- Recognized Speech Text -->
     <TextView
         android:id="@+id/txtSpeechResult"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Listening..."
+        android:text="Voice Assistant"
         android:textSize="18sp"
         android:textStyle="bold"
         android:textColor="@android:color/black"
         android:paddingTop="10dp"
-        android:gravity="center"
-        android:visibility="gone"/>
+        android:gravity="center"/>
 
 </LinearLayout>

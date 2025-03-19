@@ -30,4 +30,20 @@
         android:textSize="24sp"
         android:padding="10dp"/>
 
+    <Switch
+        android:id="@+id/switchCameraAudio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Use audio from microphone on the camera"
+        android:textSize="24sp"
+        android:padding="10dp"/>
+
+    <Switch
+        android:id="@+id/switchUsbCamera"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Use USB camera on the smartglass"
+        android:textSize="24sp"
+        android:padding="10dp"/>
+
 </LinearLayout>
