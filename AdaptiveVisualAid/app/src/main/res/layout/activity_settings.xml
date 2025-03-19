@@ -20,6 +20,7 @@
         android:layout_height="wrap_content"
         android:text="Activate voice assistant by 'Hey AVA'"
         android:textSize="24sp"
+        android:textStyle="bold"
         android:padding="10dp"/>
 
     <Switch
@@ -28,6 +29,7 @@
         android:layout_height="wrap_content"
         android:text="Activate voice assistant by tapping glass frame"
         android:textSize="24sp"
+        android:textStyle="bold"
         android:padding="10dp"/>
 
     <Switch
@@ -36,6 +38,7 @@
         android:layout_height="wrap_content"
         android:text="Use audio from microphone on the camera"
         android:textSize="24sp"
+        android:textStyle="bold"
         android:padding="10dp"/>
 
     <Switch
@@ -44,6 +47,7 @@
         android:layout_height="wrap_content"
         android:text="Use USB camera on the smartglass"
         android:textSize="24sp"
+        android:textStyle="bold"
         android:padding="10dp"/>
 
 </LinearLayout>
