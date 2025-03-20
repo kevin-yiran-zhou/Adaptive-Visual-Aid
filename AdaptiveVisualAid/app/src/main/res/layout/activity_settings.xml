@@ -50,4 +50,21 @@
         android:textStyle="bold"
         android:padding="10dp"/>
 
+    <Button
+        android:id="@+id/btnSaveAndRestart"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:text="Save"
+        android:padding="5dp"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textAllCaps="false"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_gravity="center_horizontal"
+        android:background="?attr/colorPrimary"
+        android:textColor="@android:color/white"
+        android:layout_alignParentBottom="true"/>
+
 </LinearLayout>

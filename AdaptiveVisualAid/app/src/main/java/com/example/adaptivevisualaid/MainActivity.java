@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.media.AudioDeviceInfo;
 import android.media.AudioManager;
 import android.net.Uri;
+import android.os.HandlerThread;
 import android.util.Log;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
@@ -39,6 +40,9 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
     boolean usbCameraEnabled;
     boolean usbMicFound = false;
     public VoiceAssistant voiceAssistant;
+    private HandlerThread usbMicThread;
+    private Handler usbMicHandler;
+    private Runnable usbMicChecker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,25 +97,8 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
             popup.show();
         });
 
-        // Load settings from SharedPreferences
-        SharedPreferences sharedPreferences = getSharedPreferences("SettingsPrefs", MODE_PRIVATE);
-        heyAvaEnabled = sharedPreferences.getBoolean("heyAvaEnabled", false);
-        tapGlassEnabled = sharedPreferences.getBoolean("tapGlassEnabled", false);
-        cameraAudioEnabled = sharedPreferences.getBoolean("cameraAudioEnabled", false);
-        usbCameraEnabled = sharedPreferences.getBoolean("usbCameraEnabled", false);
-        // Apply settings
-        if (heyAvaEnabled) {
-            startWakeWordDetection();  // Start "Hey Ava" listening
-        }
-        if (tapGlassEnabled) {
-            // Implement tap detection later if needed
-        }
-        if (cameraAudioEnabled) {
-            checkUsbMicrophoneAvailability();
-        }
-        if (usbCameraEnabled) {
-            // Implement later if needed
-        }
+        // Load settings
+        loadSettings();
     }
 
     @Override
@@ -133,6 +120,32 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                 Toast.makeText(this, "Microphone Permission Denied", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private void loadSettings() {
+        SharedPreferences sharedPreferences = getSharedPreferences("SettingsPrefs", MODE_PRIVATE);
+        heyAvaEnabled = sharedPreferences.getBoolean("heyAvaEnabled", false);
+        tapGlassEnabled = sharedPreferences.getBoolean("tapGlassEnabled", false);
+        cameraAudioEnabled = sharedPreferences.getBoolean("cameraAudioEnabled", false);
+        usbCameraEnabled = sharedPreferences.getBoolean("usbCameraEnabled", false);
+
+        if (heyAvaEnabled) {
+            startWakeWordDetection();
+        }
+        if (tapGlassEnabled) {
+            // Implement tap detection later if needed
+        }
+        if (cameraAudioEnabled) {
+            startUsbMicrophoneCheckLoop();
+        }
+        if (usbCameraEnabled) {
+            // Implement USB camera handling if needed
+        }
+
+        Log.d("Settings", "Settings Loaded: heyAvaEnabled=" + heyAvaEnabled +
+                ", tapGlassEnabled=" + tapGlassEnabled +
+                ", cameraAudioEnabled=" + cameraAudioEnabled +
+                ", usbCameraEnabled=" + usbCameraEnabled);
     }
 
     public void speakAndLaunch(String message, Runnable action) {
@@ -176,35 +189,70 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         Log.d("VoiceAssistant", "'Hey Ava' detection started");
     }
 
+    private void stopWakeWordDetection() {
+        // Placeholder for "Hey Ava" voice activation
+        // We will implement this next!
+        Log.d("VoiceAssistant", "'Hey Ava' detection stopped");
+    }
+
+    private void startUsbMicrophoneCheckLoop() {
+        if (usbMicThread == null) {  // Prevent multiple thread creation
+            usbMicThread = new HandlerThread("USBMicCheckerThread");
+            usbMicThread.start();
+            usbMicHandler = new Handler(usbMicThread.getLooper());
+        }
+
+        if (usbMicChecker == null) {  // Prevent duplicate runnables
+            usbMicChecker = new Runnable() {
+                @Override
+                public void run() {
+                    boolean prevUsbMicFound = usbMicFound;
+                    checkUsbMicrophoneAvailability();
+
+                    if (usbMicFound && !prevUsbMicFound) {
+                        Log.d("USBMic", "USB Microphone plugged in");
+                        runOnUiThread(() ->
+                                Toast.makeText(MainActivity.this, "USB Microphone plugged in!", Toast.LENGTH_LONG).show()
+                        );
+                    }
+                    if (!usbMicFound && prevUsbMicFound) {
+                        Log.d("USBMic", "USB Microphone unplugged");
+                        runOnUiThread(() ->
+                                Toast.makeText(MainActivity.this, "USB Microphone unplugged!", Toast.LENGTH_LONG).show()
+                        );
+                    }
+
+                    usbMicHandler.postDelayed(this, 1000); // Keep checking every 1 second
+                }
+            };
+        }
+
+        usbMicHandler.post(usbMicChecker);
+    }
+
+    private void stopUsbMicrophoneCheckLoop() {
+        if (usbMicHandler != null) {
+            usbMicHandler.removeCallbacks(usbMicChecker); // Ensure no pending callbacks
+        }
+        if (usbMicThread != null && usbMicThread.isAlive()) {
+            usbMicThread.quitSafely();
+            usbMicThread = null;  // Ensure proper cleanup
+        }
+        usbMicFound = false;
+        Log.d("USBMic", "Stopped checking USB microphone.");
+    }
+
     private void checkUsbMicrophoneAvailability() {
         AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        String message = "Checking USB Microphone...";  // Initialize message
-        Boolean micFound = false;
+        boolean micFound = false;
 
-        if (audioManager.getDevices(AudioManager.GET_DEVICES_INPUTS).length > 0) {
-            for (AudioDeviceInfo device : audioManager.getDevices(AudioManager.GET_DEVICES_INPUTS)) {
-                if (device.getType() == AudioDeviceInfo.TYPE_USB_DEVICE) {
-                    message = "USB Microphone Found: " + device.getProductName();
-                    micFound = true;
-                    break;
-                }
+        for (AudioDeviceInfo device : audioManager.getDevices(AudioManager.GET_DEVICES_INPUTS)) {
+            if (device.getType() == AudioDeviceInfo.TYPE_USB_DEVICE) {
+                micFound = true;
+                break;
             }
         }
         usbMicFound = micFound;
-        if (!micFound) {
-            message = "No USB Microphone Detected";
-        }
-        // Show a Toast message
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-    }
-
-
-    @Override
-    protected void onDestroy() {
-        if (tts != null) {
-            tts.shutdown();
-        }
-        super.onDestroy();
     }
 
     @Override
@@ -222,5 +270,18 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
 //            }
 //        }
         voiceAssistant.handleVoiceRecognitionResult(requestCode, resultCode, data);
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        if (tts != null) {
+            tts.stop();
+            tts.shutdown();
+            tts = null;
+        }
+        // Stop USB microphone checking properly
+        stopUsbMicrophoneCheckLoop();
+        super.onDestroy();
     }
 }
