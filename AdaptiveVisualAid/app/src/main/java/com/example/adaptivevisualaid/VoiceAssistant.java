@@ -100,15 +100,15 @@ public class VoiceAssistant {
 
     private void startListeningWithPhoneMicrophone() {
         isListening = true;
-        txtSpeechResult.setVisibility(TextView.VISIBLE);
         txtSpeechResult.setText("Listening...");
 
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "How can I help you?");
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en-US");
 
         try {
-            activity.startActivityForResult(intent, VOICE_RECOGNITION_REQUEST_CODE);
+//            activity.startActivityForResult(intent, VOICE_RECOGNITION_REQUEST_CODE);
+            speechRecognizer.startListening(intent);
         } catch (ActivityNotFoundException e) {
             txtSpeechResult.setText("Speech recognition not supported");
             isListening = false;
@@ -139,7 +139,13 @@ public class VoiceAssistant {
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en-US");
 
-        speechRecognizer.startListening(intent);
+        try {
+//            activity.startActivityForResult(intent, VOICE_RECOGNITION_REQUEST_CODE);
+            speechRecognizer.startListening(intent);
+        } catch (ActivityNotFoundException e) {
+            txtSpeechResult.setText("Speech recognition not supported");
+            isListening = false;
+        }
     }
 
     public void stopListening() {

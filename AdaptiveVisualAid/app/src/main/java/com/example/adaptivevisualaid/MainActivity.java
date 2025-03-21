@@ -258,17 +258,6 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == SETTINGS_REQUEST_CODE && resultCode == RESULT_OK) {
-//            // Reload preferences when returning from settings
-//            SharedPreferences sharedPreferences = getSharedPreferences("SettingsPrefs", MODE_PRIVATE);
-//            boolean heyAvaEnabled = sharedPreferences.getBoolean("heyAvaEnabled", false);
-//
-//            if (heyAvaEnabled) {
-//                startWakeWordDetection();
-//            } else {
-//                stopWakeWordDetection(); // Stop listening if the user turns it off
-//            }
-//        }
         voiceAssistant.handleVoiceRecognitionResult(requestCode, resultCode, data);
     }
 
