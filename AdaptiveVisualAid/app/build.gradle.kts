@@ -35,6 +35,9 @@ dependencies {
 
     implementation(libs.appcompat)
     implementation(libs.material)
+    //
+    implementation("ai.picovoice:porcupine-android:3.0.1")
+    //
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

@@ -1,6 +1,9 @@
 package com.example.adaptivevisualaid;
 
+import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageInfo;
@@ -8,6 +11,7 @@ import android.content.Intent;
 import android.media.AudioDeviceInfo;
 import android.media.AudioManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.HandlerThread;
 import android.util.Log;
 import android.os.Bundle;
@@ -184,16 +188,29 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
     }
 
     private void startWakeWordDetection() {
-        // Placeholder for "Hey Ava" voice activation
-        // We will implement this next!
-        Log.d("VoiceAssistant", "'Hey Ava' detection started");
+        Log.d("VoiceAssistant", "'Hey Ava' Porcupine detection started");
+        Intent intent = new Intent(this, PorcupineService.class);
+        ContextCompat.startForegroundService(this, intent);
     }
 
     private void stopWakeWordDetection() {
-        // Placeholder for "Hey Ava" voice activation
-        // We will implement this next!
-        Log.d("VoiceAssistant", "'Hey Ava' detection stopped");
+        Log.d("VoiceAssistant", "'Hey Ava' Porcupine detection stopped");
+        Intent intent = new Intent(this, PorcupineService.class);
+        stopService(intent);
     }
+
+    private final BroadcastReceiver wakeWordReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d("WakeWord", "Hey Ava detected. Starting voice assistant.");
+            runOnUiThread(() -> {
+                speak("Hi, how can I help you?");
+                new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                    voiceAssistant.startListening();
+                }, 2000);
+            });
+        }
+    };
 
     private void startUsbMicrophoneCheckLoop() {
         if (usbMicThread == null) {  // Prevent multiple thread creation
@@ -261,6 +278,25 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         voiceAssistant.handleVoiceRecognitionResult(requestCode, resultCode, data);
     }
 
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        IntentFilter filter = new IntentFilter("com.example.adaptivevisualaid.WAKE_WORD_DETECTED");
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(wakeWordReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            registerReceiver(wakeWordReceiver, filter);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(wakeWordReceiver);
+    }
 
     @Override
     protected void onDestroy() {
