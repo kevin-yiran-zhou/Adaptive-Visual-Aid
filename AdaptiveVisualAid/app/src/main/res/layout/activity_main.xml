@@ -30,43 +30,69 @@
     <!--        android:paddingBottom="30dp"-->
     <!--        android:textAllCaps="false"/>-->
 
-    <!-- Navigation Button -->
-    <Button
-        android:id="@+id/btnNavigation"
+    <!-- First Row: Seg + Dep and Google Maps -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:text="Google Maps"
-        android:padding="5dp"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:textAllCaps="false"
-        android:layout_marginHorizontal="20dp"/>
-
-    <!-- I need help Button -->
-    <Button
-        android:id="@+id/btnNeedHelp"
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:text="Be My Eyes"
-        android:padding="5dp"
-        android:textSize="24sp"
-        android:textStyle="bold"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:layout_marginTop="10dp"
-        android:textAllCaps="false"
-        android:layout_marginHorizontal="20dp"/>
+        android:layout_marginHorizontal="10dp"
+        android:weightSum="2">
 
-    <!-- What is in front of me? Button -->
-    <Button
-        android:id="@+id/btnWhatIsInFront"
+        <Button
+            android:id="@+id/btnSegDep"
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_weight="1"
+            android:text="Seg and Dep"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textAllCaps="false"
+            android:layout_marginEnd="5dp"/>
+
+        <Button
+            android:id="@+id/btnNavigation"
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_weight="1"
+            android:text="Google Maps"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textAllCaps="false"
+            android:layout_marginStart="5dp"/>
+    </LinearLayout>
+
+    <!-- Second Row: Be My Eyes and Envision AI -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:text="Envision AI"
-        android:padding="5dp"
-        android:textSize="24sp"
-        android:textStyle="bold"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:layout_marginTop="10dp"
-        android:textAllCaps="false"
-        android:layout_marginHorizontal="20dp"/>
+        android:layout_marginHorizontal="10dp"
+        android:weightSum="2">
+
+        <Button
+            android:id="@+id/btnNeedHelp"
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_weight="1"
+            android:text="Be My Eyes"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textAllCaps="false"
+            android:layout_marginEnd="5dp"/>
+
+        <Button
+            android:id="@+id/btnWhatIsInFront"
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_weight="1"
+            android:text="Envision AI"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textAllCaps="false"
+            android:layout_marginStart="5dp"/>
+    </LinearLayout>
 
     <!-- Microphone Button -->
     <ImageButton

@@ -64,6 +64,9 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         TextView txtSpeechResult = findViewById(R.id.txtSpeechResult);
         voiceAssistant = new VoiceAssistant(this, txtSpeechResult);
 
+        findViewById(R.id.btnSegDep).setOnClickListener(v -> {
+            startActivity(new Intent(MainActivity.this, SegDepActivity.class));
+        });
         findViewById(R.id.btnNavigation).setOnClickListener(v -> speakAndLaunch("Going to Google Maps", this::openGoogleMaps));
         findViewById(R.id.btnWhatIsInFront).setOnClickListener(v -> speakAndLaunch("Going to Envision AI", this::openEnvisionAI));
         findViewById(R.id.btnNeedHelp).setOnClickListener(v -> speakAndLaunch("Going to Be My Eyes", this::openBeMyEyes));
