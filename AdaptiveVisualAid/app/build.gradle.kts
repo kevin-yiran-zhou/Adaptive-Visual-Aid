@@ -37,6 +37,7 @@ dependencies {
     implementation(libs.material)
     //
     implementation("ai.picovoice:porcupine-android:3.0.1")
+    implementation("com.microsoft.onnxruntime:onnxruntime-android:1.17.0")
     //
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)

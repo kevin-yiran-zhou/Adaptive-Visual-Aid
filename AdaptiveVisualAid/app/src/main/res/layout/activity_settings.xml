@@ -27,7 +27,7 @@
         android:id="@+id/switchTapGlass"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Activate voice assistant by tapping glass frame"
+        android:text="Activate voice assistant by tapping smartglass"
         android:textSize="24sp"
         android:textStyle="bold"
         android:padding="10dp"/>
@@ -36,7 +36,7 @@
         android:id="@+id/switchCameraAudio"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Use audio from microphone on the camera"
+        android:text="Use audio from microphone on the smartglass"
         android:textSize="24sp"
         android:textStyle="bold"
         android:padding="10dp"/>
