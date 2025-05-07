@@ -12,15 +12,21 @@ public class ModelSelectionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_model_selection);
 
-        Button btnOnnx = findViewById(R.id.btn_depth_anything_onnx);
-        Button btnTflite = findViewById(R.id.btn_depth_anything_tflite);
+        Button btnSegformerOnnx = findViewById(R.id.btn_segformer_onnx);
+        Button btnDepthAnythingOnnx = findViewById(R.id.btn_depth_anything_onnx);
+        Button btnDepthAnythingTflite = findViewById(R.id.btn_depth_anything_tflite);
 
-        btnOnnx.setOnClickListener(v -> {
+        btnSegformerOnnx.setOnClickListener(v -> {
+            Intent intent = new Intent(ModelSelectionActivity.this, ONNXSegformerActivity.class);
+            startActivity(intent);
+        });
+
+        btnDepthAnythingOnnx.setOnClickListener(v -> {
             Intent intent = new Intent(ModelSelectionActivity.this, ONNXDepthAnythingActivity.class);
             startActivity(intent);
         });
 
-        btnTflite.setOnClickListener(v -> {
+        btnDepthAnythingTflite.setOnClickListener(v -> {
             Intent intent = new Intent(ModelSelectionActivity.this, TFLiteDepthAnythingActivity.class);
             startActivity(intent);
         });

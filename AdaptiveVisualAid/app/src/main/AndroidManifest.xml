@@ -44,6 +44,7 @@
 
         <activity android:name=".SettingsActivity" />
         <activity android:name=".ModelSelectionActivity" />
+        <activity android:name=".ONNXSegformerActivity" />
         <activity android:name=".ONNXDepthAnythingActivity" />
         <activity android:name=".TFLiteDepthAnythingActivity" />
 
