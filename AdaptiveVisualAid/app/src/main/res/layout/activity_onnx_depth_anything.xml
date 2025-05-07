@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layoutRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="top|center_horizontal"
+    android:padding="20dp">
+
+    <TextView
+        android:id="@+id/txtModel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Depth Anything (ONNX)"
+        android:textSize="16sp"
+        android:layout_marginBottom="5dp"
+        android:textColor="@android:color/black"
+        android:gravity="center" />
+
+    <Button
+        android:id="@+id/btnSelectImage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select Image from Gallery"
+        android:layout_marginBottom="5dp" />
+
+    <TextView
+        android:id="@+id/txtInferenceTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Inference time: ? seconds"
+        android:textSize="16sp"
+        android:layout_marginBottom="8dp"
+        android:textColor="@android:color/black"
+        android:gravity="center" />
+
+    <TextView
+        android:id="@+id/txtTotalTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Total time: ? seconds"
+        android:textSize="16sp"
+        android:layout_marginBottom="8dp"
+        android:textColor="@android:color/black"
+        android:gravity="center" />
+
+    <ImageView
+        android:id="@+id/imageOriginal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:layout_marginBottom="8dp" />
+
+    <ImageView
+        android:id="@+id/imageDepth"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:layout_marginTop="8dp" />
+
+</LinearLayout>

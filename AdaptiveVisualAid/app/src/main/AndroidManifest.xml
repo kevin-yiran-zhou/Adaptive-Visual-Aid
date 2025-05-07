@@ -43,7 +43,9 @@
         </activity>
 
         <activity android:name=".SettingsActivity" />
-        <activity android:name=".SegDepActivity" />
+        <activity android:name=".ModelSelectionActivity" />
+        <activity android:name=".ONNXDepthAnythingActivity" />
+        <activity android:name=".TFLiteDepthAnythingActivity" />
 
         <!-- Declare Porcupine Wake Word Service -->
         <service

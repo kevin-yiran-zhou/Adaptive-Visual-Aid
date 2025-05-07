@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.pm.PackageInfo;
 import android.content.Intent;
 import android.media.AudioDeviceInfo;
 import android.media.AudioManager;
@@ -17,7 +16,6 @@ import android.util.Log;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
-import android.widget.Button;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.ImageButton;
@@ -26,7 +24,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import java.util.Locale;
-import java.util.List;
+
 import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;
@@ -65,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         voiceAssistant = new VoiceAssistant(this, txtSpeechResult);
 
         findViewById(R.id.btnSegDep).setOnClickListener(v -> {
-            startActivity(new Intent(MainActivity.this, SegDepActivity.class));
+            startActivity(new Intent(MainActivity.this, ModelSelectionActivity.class));
         });
         findViewById(R.id.btnNavigation).setOnClickListener(v -> speakAndLaunch("Going to Google Maps", this::openGoogleMaps));
         findViewById(R.id.btnWhatIsInFront).setOnClickListener(v -> speakAndLaunch("Going to Envision AI", this::openEnvisionAI));

@@ -16,60 +16,52 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import ai.onnxruntime.*;
+import org.tensorflow.lite.Interpreter;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.IOException;
-import java.nio.FloatBuffer;
-import java.util.Collections;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
 
-public class SegDepActivity extends AppCompatActivity {
+public class TFLiteDepthAnythingActivity extends AppCompatActivity {
 
-    private static final String TAG = "SegDepActivity";
-    private static final String MODEL_NAME = "depth_anything_v2_vits.onnx";
+    private static final String TAG = "TFLiteDepthAnything";
+    private static final String MODEL_NAME = "depth_anything.tflite";
     private static final int PICK_IMAGE_REQUEST = 1001;
 
-    private OrtEnvironment env;
-    private OrtSession session;
+    private Interpreter tflite;
 
     private ImageView originalImageView;
     private ImageView depthImageView;
     private TextView inferenceTimeText;
+    private TextView totalTimeText;
 
     private Bitmap originalBitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_seg_dep);
+        setContentView(R.layout.activity_tflite_depth_anything);
 
         Button btnSelectImage = findViewById(R.id.btnSelectImage);
         originalImageView = findViewById(R.id.imageOriginal);
         depthImageView = findViewById(R.id.imageDepth);
         inferenceTimeText = findViewById(R.id.txtInferenceTime);
+        totalTimeText = findViewById(R.id.txtTotalTime);
 
         btnSelectImage.setOnClickListener(v -> selectImageFromGallery());
 
         new Thread(() -> {
             try {
                 File modelFile = copyAssetToFile(MODEL_NAME);
-                env = OrtEnvironment.getEnvironment();
-                OrtSession.SessionOptions sessionOptions = new OrtSession.SessionOptions();
-                if (OrtEnvironment.getAvailableProviders().contains("NNAPI")) {
-                    sessionOptions.addNnapi();
-                    Log.d(TAG, "NNAPI enabled for ONNX Runtime.");
-                } else {
-                    Log.d(TAG, "NNAPI not available.");
-                }
-                session = env.createSession(modelFile.getAbsolutePath(), sessionOptions);
-
-                Log.d(TAG, "Model loaded successfully!");
-                runOnUiThread(() -> Toast.makeText(this, "Model loaded", Toast.LENGTH_SHORT).show());
+                tflite = new Interpreter(modelFile);
+                Log.d(TAG, "TFLite model loaded successfully!");
+                runOnUiThread(() -> Toast.makeText(this, "TFLite model loaded", Toast.LENGTH_SHORT).show());
             } catch (Exception e) {
-                Log.e(TAG, "Failed to load model: " + e.getMessage(), e);
-                runOnUiThread(() -> Toast.makeText(this, "Model load failed", Toast.LENGTH_SHORT).show());
+                Log.e(TAG, "Failed to load TFLite model", e);
+                runOnUiThread(() -> Toast.makeText(this, "TFLiteModel load failed", Toast.LENGTH_SHORT).show());
             }
         }).start();
     }
@@ -130,9 +122,17 @@ public class SegDepActivity extends AppCompatActivity {
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
             Uri imageUri = data.getData();
             try {
+                long totalStart = System.currentTimeMillis();
+                Log.d(TAG, "1");
                 originalBitmap = loadBitmapWithCorrectOrientation(imageUri);
+                Log.d(TAG, "2");
                 originalImageView.setImageBitmap(originalBitmap);
+                Log.d(TAG, "3");
                 runDepthInference(originalBitmap);
+                Log.d(TAG, "4");
+                long totalEnd = System.currentTimeMillis();
+                float seconds = (totalEnd - totalStart) / 1000f;
+                totalTimeText.setText(String.format("Total time: %.2f seconds", seconds));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -140,38 +140,31 @@ public class SegDepActivity extends AppCompatActivity {
     }
 
     private void runDepthInference(Bitmap bitmap) {
-        if (session == null) {
+        if (tflite == null) {
             Toast.makeText(this, "Model not ready yet", Toast.LENGTH_SHORT).show();
             return;
         }
 
         Bitmap resized = Bitmap.createScaledBitmap(bitmap, 518, 518, true);
-        float[] input = preprocess(resized);
+        float[][][][] input = preprocess(resized);  // shape: [1, 518, 518, 3]
+        float[][][][] output = new float[1][1][518][518]; // adjust based on actual output shape if needed
 
-        try {
-            long start = System.currentTimeMillis();
-            OnnxTensor inputTensor = OnnxTensor.createTensor(env, FloatBuffer.wrap(input), new long[]{1, 3, 518, 518});
-            OrtSession.Result output = session.run(Collections.singletonMap("l_x_", inputTensor));
-            long end = System.currentTimeMillis();
+        long start = System.currentTimeMillis();
+        tflite.run(input, output);
+        long end = System.currentTimeMillis();
+        float[][] depth = output[0][0];
 
-            float[][][] rawOutput = (float[][][]) output.get(0).getValue();
-            float[][] depth = rawOutput[0];
-            Bitmap depthBitmap = toGrayscaleBitmap(depth);
+        Bitmap depthBitmap = toGrayscaleBitmap(depth);
+        Bitmap scaledDepth = Bitmap.createScaledBitmap(depthBitmap, originalBitmap.getWidth(), originalBitmap.getHeight(), true);
+        depthImageView.setImageBitmap(scaledDepth);
 
-            Bitmap scaledDepth = Bitmap.createScaledBitmap(depthBitmap, originalBitmap.getWidth(), originalBitmap.getHeight(), true);
-            depthImageView.setImageBitmap(scaledDepth);
-
-            float seconds = (end - start) / 1000f;
-            inferenceTimeText.setText(String.format("Inference time: %.2f seconds", seconds));
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        float seconds = (end - start) / 1000f;
+        inferenceTimeText.setText(String.format("Inference time: %.2f seconds", seconds));
     }
 
-    private float[] preprocess(Bitmap bmp) {
+    private float[][][][] preprocess(Bitmap bmp) {
         int width = bmp.getWidth(), height = bmp.getHeight();
-        float[] data = new float[3 * width * height];
+        float[][][][] input = new float[1][height][width][3];
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
@@ -179,13 +172,12 @@ public class SegDepActivity extends AppCompatActivity {
                 float r = ((px >> 16) & 0xFF) / 255.0f;
                 float g = ((px >> 8) & 0xFF) / 255.0f;
                 float b = (px & 0xFF) / 255.0f;
-                int idx = y * width + x;
-                data[idx] = r;
-                data[width * height + idx] = g;
-                data[2 * width * height + idx] = b;
+                input[0][y][x][0] = r;
+                input[0][y][x][1] = g;
+                input[0][y][x][2] = b;
             }
         }
-        return data;
+        return input;
     }
 
     private Bitmap toGrayscaleBitmap(float[][] depth) {

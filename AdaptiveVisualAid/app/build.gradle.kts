@@ -38,6 +38,8 @@ dependencies {
     //
     implementation("ai.picovoice:porcupine-android:3.0.1")
     implementation("com.microsoft.onnxruntime:onnxruntime-android:1.17.0")
+    implementation("org.tensorflow:tensorflow-lite:2.12.0")
+    // implementation(libs.litert)
     //
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
