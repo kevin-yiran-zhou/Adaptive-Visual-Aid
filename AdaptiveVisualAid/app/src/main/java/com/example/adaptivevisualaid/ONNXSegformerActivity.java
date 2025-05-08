@@ -3,13 +3,17 @@ package com.example.adaptivevisualaid;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +28,8 @@ import java.io.InputStream;
 import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ONNXSegformerActivity extends AppCompatActivity {
 
@@ -67,11 +73,11 @@ public class ONNXSegformerActivity extends AppCompatActivity {
                 }
                 session = env.createSession(modelFile.getAbsolutePath(), sessionOptions);
 
-                Log.d(TAG, "SegFormer ONNX Model loaded successfully!");
-                runOnUiThread(() -> Toast.makeText(this, "ONNX Model loaded", Toast.LENGTH_SHORT).show());
+                Log.d(TAG, MODEL_NAME + " loaded successfully!");
+                runOnUiThread(() -> Toast.makeText(this, MODEL_NAME + " loaded successfully!", Toast.LENGTH_SHORT).show());
             } catch (Exception e) {
-                Log.e(TAG, "Failed to load ONNX model", e);
-                runOnUiThread(() -> Toast.makeText(this, "Model load failed", Toast.LENGTH_SHORT).show());
+                Log.e(TAG, "Failed to load " + MODEL_NAME, e);
+                runOnUiThread(() -> Toast.makeText(this, MODEL_NAME + " load failed", Toast.LENGTH_SHORT).show());
             }
         }).start();
     }
@@ -193,6 +199,47 @@ public class ONNXSegformerActivity extends AppCompatActivity {
             Bitmap overlay = blendBitmaps(originalBitmap, scaledSeg, 0.75f);  // 75% mask transparency
             segImageView.setImageBitmap(overlay);
 
+            // ⬇️ Build filtered legend
+            LinearLayout legendLayout = findViewById(R.id.legendLayout);
+            legendLayout.removeAllViews();
+
+            int[][] colors = getADE20KColors();
+            String[] labels = getADE20KLabels();
+
+            // Step 1: Gather used class IDs
+            Set<Integer> usedClasses = new HashSet<>();
+            for (int y = 0; y < segMap.length; y++) {
+                for (int x = 0; x < segMap[0].length; x++) {
+                    usedClasses.add(segMap[y][x]);
+                }
+            }
+
+            // Step 2: Add legend entries for only used classes
+            for (int classId : usedClasses) {
+                if (classId >= labels.length || classId >= colors.length) continue;
+
+                LinearLayout itemLayout = new LinearLayout(this);
+                itemLayout.setOrientation(LinearLayout.VERTICAL);
+                itemLayout.setPadding(10, 0, 10, 0);
+                itemLayout.setGravity(Gravity.CENTER_HORIZONTAL);
+
+                View colorBox = new View(this);
+                int size = (int) (getResources().getDisplayMetrics().density * 40); // 24dp
+                LinearLayout.LayoutParams boxParams = new LinearLayout.LayoutParams(size, size);
+                colorBox.setLayoutParams(boxParams);
+                colorBox.setBackgroundColor(Color.rgb(colors[classId][0], colors[classId][1], colors[classId][2]));
+
+                TextView label = new TextView(this);
+                label.setText(labels[classId]);
+                label.setTextSize(10f);
+                label.setGravity(Gravity.CENTER);
+                label.setMaxLines(1);
+
+                itemLayout.addView(colorBox);
+                itemLayout.addView(label);
+                legendLayout.addView(itemLayout);
+            }
+
             float seconds = (end - start) / 1000f;
             inferenceTimeText.setText(String.format("Inference time: %.2f seconds", seconds));
         } catch (Exception e) {
@@ -259,6 +306,26 @@ public class ONNXSegformerActivity extends AppCompatActivity {
         }
 
         return bmp;
+    }
+
+    private String[] getADE20KLabels() {
+        return new String[] {
+                "wall", "building", "sky", "floor", "tree", "ceiling", "road", "bed", "windowpane", "grass",
+                "cabinet", "sidewalk", "person", "earth", "door", "table", "mountain", "plant", "curtain", "chair",
+                "car", "water", "painting", "sofa", "shelf", "house", "sea", "mirror", "rug", "field",
+                "armchair", "seat", "fence", "desk", "rock", "wardrobe", "lamp", "bathtub", "railing", "cushion",
+                "base", "box", "column", "signboard", "chest of drawers", "counter", "sand", "sink", "skyscraper", "fireplace",
+                "refrigerator", "grandstand", "path", "stairs", "runway", "case", "pool table", "pillow", "screen door", "stairway",
+                "river", "bridge", "bookcase", "blind", "coffee table", "toilet", "flower", "book", "hill", "bench",
+                "countertop", "stove", "palm", "kitchen island", "computer", "swivel chair", "boat", "bar", "arcade machine", "hovel",
+                "bus", "towel", "light", "truck", "tower", "chandelier", "awning", "streetlight", "booth", "television receiver",
+                "airplane", "dirt track", "apparel", "pole", "land", "bannister", "escalator", "ottoman", "bottle", "buffet",
+                "poster", "stage", "van", "ship", "fountain", "conveyer belt", "canopy", "washer", "plaything", "swimming pool",
+                "stool", "barrel", "basket", "waterfall", "tent", "bag", "minibike", "cradle", "oven", "ball",
+                "food", "step", "tank", "trade name", "microwave", "pot", "animal", "bicycle", "lake", "dishwasher",
+                "screen", "blanket", "sculpture", "hood", "sconce", "vase", "traffic light", "tray", "ashcan", "fan",
+                "pier", "crt screen", "plate", "monitor", "bulletin board", "shower", "radiator", "glass", "clock", "flag"
+        };
     }
 
     private int[][] getADE20KColors() {

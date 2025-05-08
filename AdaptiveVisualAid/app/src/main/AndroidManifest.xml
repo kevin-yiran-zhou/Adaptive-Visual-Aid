@@ -47,6 +47,7 @@
         <activity android:name=".ONNXSegformerActivity" />
         <activity android:name=".ONNXDepthAnythingActivity" />
         <activity android:name=".TFLiteDepthAnythingActivity" />
+        <activity android:name=".ONNXRealtimeActivity" />
 
         <!-- Declare Porcupine Wake Word Service -->
         <service

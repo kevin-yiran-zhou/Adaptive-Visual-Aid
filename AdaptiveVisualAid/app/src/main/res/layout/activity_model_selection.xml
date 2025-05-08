@@ -10,6 +10,9 @@
         android:id="@+id/btn_segformer_onnx"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:textSize="24sp"
+        android:textStyle="bold"
         android:text="Segformer (ONNX)"
         android:layout_marginBottom="20dp" />
 
@@ -17,6 +20,9 @@
         android:id="@+id/btn_depth_anything_onnx"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:textSize="24sp"
+        android:textStyle="bold"
         android:text="Depth Anything (ONNX)"
         android:layout_marginBottom="20dp" />
 
@@ -24,6 +30,19 @@
         android:id="@+id/btn_depth_anything_tflite"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Depth Anything (TFLite)" />
+        android:textAllCaps="false"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:text="Depth Anything (TFLite)"
+        android:layout_marginBottom="20dp" />
+
+    <Button
+        android:id="@+id/btn_realtime_onnx"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:text="Realtime Seg+Dep (ONNX)" />
 
 </LinearLayout>

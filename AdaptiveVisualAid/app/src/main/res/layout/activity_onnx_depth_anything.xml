@@ -21,6 +21,7 @@
     <Button
         android:id="@+id/btnSelectImage"
         android:layout_width="match_parent"
+        android:textAllCaps="false"
         android:layout_height="wrap_content"
         android:text="Select Image from Gallery"
         android:layout_marginBottom="5dp" />

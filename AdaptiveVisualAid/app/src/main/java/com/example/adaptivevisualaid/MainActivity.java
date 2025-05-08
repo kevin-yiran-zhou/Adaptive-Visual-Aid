@@ -92,6 +92,9 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                 if (item.getItemId() == R.id.menu_settings) {
                     startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                     return true;
+                } else if (item.getItemId() == R.id.menu_test_segdep) {
+                    startActivity(new Intent(MainActivity.this, ModelSelectionActivity.class));
+                    return true;
                 } else if (item.getItemId() == R.id.menu_login) {
                     // Handle login click (future implementation)
                     return true;
